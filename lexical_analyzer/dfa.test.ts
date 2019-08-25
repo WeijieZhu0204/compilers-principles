@@ -64,7 +64,6 @@ test("a+b*3/22-d", () => {
       type: "Number",
       value: "22"
     },
-
     {
       type: "Minus",
       value: "-"

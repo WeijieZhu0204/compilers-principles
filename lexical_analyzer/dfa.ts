@@ -1,15 +1,6 @@
 /**
  * 有限自动机 DFA
  */
-// 有限自动机状态
-enum DFAState {
-  Initial = "Initial",
-  Identifier = "Identifier",
-  Number = "Number",
-  GT = "GT",
-  GE = "GE",
-  EQ = "EQ"
-}
 
 // token类型
 enum TokenType {
@@ -22,7 +13,29 @@ enum TokenType {
   // >=
   GE = "GE",
   // =
-  EQ = "EQ"
+  EQ = "EQ",
+  // +
+  Plus = "Plus",
+  // -
+  Minus = "Minus",
+  // *
+  Multiply = "Multiply",
+  // /
+  Divide = "Divide"
+}
+
+// 有限自动机状态
+enum DFAState {
+  Initial = "Initial",
+  Identifier = "Identifier",
+  Number = "Number",
+  GT = "GT",
+  GE = "GE",
+  EQ = "EQ",
+  Plus = "Plus",
+  Minus = "Minus",
+  Multiply = "Multiply",
+  Divide = "Divide"
 }
 
 interface Token {
@@ -46,6 +59,10 @@ function isDigit(char: string) {
   return /\d/.test(char);
 }
 
+/**
+ * DFA词法分析程序入口
+ * @param source 源代码
+ */
 function main(source: string) {
   let state: DFAState;
   const token: Token = { type: "", value: "" };
@@ -60,22 +77,33 @@ function main(source: string) {
     if (char === " ") {
       state = undefined;
       return;
-    } else if (isIdentifier(char)) {
+    }
+
+    token.value = char;
+    if (isIdentifier(char)) {
       state = DFAState.Identifier;
       token.type = TokenType.Identifier;
-      token.value = char;
     } else if (isDigit(char)) {
       state = DFAState.Number;
       token.type = TokenType.Number;
-      token.value = char;
     } else if (char === ">") {
       state = DFAState.GT;
       token.type = TokenType.GT;
-      token.value = char;
     } else if (char === "=") {
       state = DFAState.EQ;
       token.type = TokenType.EQ;
-      token.value = char;
+    } else if (char === "+") {
+      state = DFAState.Plus;
+      token.type = TokenType.Plus;
+    } else if (char === "-") {
+      state = DFAState.Minus;
+      token.type = TokenType.Minus;
+    } else if (char === "*") {
+      state = DFAState.Multiply;
+      token.type = TokenType.Multiply;
+    } else if (char === "/") {
+      state = DFAState.Divide;
+      token.type = TokenType.Divide;
     } else {
       throw new Error(`Illegal Token: '${char}'`);
     }
@@ -107,8 +135,6 @@ function main(source: string) {
       case DFAState.Number:
         if (isDigit(char)) {
           token.value += char;
-        } else if (char !== " ") {
-          throw new Error(`Illegal Number: ${token.value + char}`);
         } else {
           initial(char);
         }
@@ -132,7 +158,8 @@ function main(source: string) {
   return tokens;
 }
 
-console.log(main("age >= 123"));
-console.log(main("  age    >=    123    "));
-console.log(main("age     >= 123   "));
-console.log(main("1_a113g_e > 0"));
+// console.log(main("age >= 123"));
+// console.log(main("  age    >=    123    "));
+// console.log(main("age     >= 123   "));
+// console.log(main("a113g_e > 0"));
+console.log(main("0-1+22/33*5"));

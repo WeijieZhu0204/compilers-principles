@@ -63,8 +63,8 @@ function isDigit(char: string) {
  * DFA词法分析程序入口
  * @param source 源代码
  */
-function main(source: string) {
-  let state: DFAState;
+export default function main(source: string) {
+  let state: DFAState | undefined;
   const token: Token = { type: "", value: "" };
   const tokens: Token[] = [];
   /**
@@ -162,4 +162,4 @@ function main(source: string) {
 // console.log(main("  age    >=    123    "));
 // console.log(main("age     >= 123   "));
 // console.log(main("a113g_e > 0"));
-console.log(main("0-1+22/33*5"));
+// console.log(main("0-1+22/33*5"));
